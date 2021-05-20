@@ -1,21 +1,45 @@
 let $start = document.querySelector('#start');
 let $game = document.querySelector('#game');
+let $time = document.querySelector('#time')
 
 let score = 0;
+let isGameStarted = false;
 
 $start.addEventListener('click', startGame);
 $game.addEventListener('click', handleBoxClick)
 
 function startGame() {
   // console.log('Start');
+  isGameStarted = true;
   $game.style.backgroundColor = '#fff';
   $start.classList.add('hide');
+
+  let interval = setInterval(function () {
+    let time = parseFloat($time.textContent)
+
+    if (time <= 0) {
+      // end game
+      clearInterval(interval)
+      endGame()
+    } else {
+      $time.textContent = (time - 0.1).toFixed(1)
+    }
+
+  }, 100)
 
   renderBox();
 }
 
+function endGame() {
+  isGameStarted = false;
+}
+
 function handleBoxClick(event) {
   // console.log(event.target.dataset);
+  if (!isGameStarted) {
+    return
+  }
+
   if (event.target.dataset.box) {
     score++;
     renderBox();
